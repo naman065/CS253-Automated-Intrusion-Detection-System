@@ -1,0 +1,33 @@
+#!/bin/bash
+# Task 3: The Report Dashboard
+# Summarizes targeted ports for all failed login attempts, sorted by highest attempts.
+
+CLEAN_LOG=${1:-clean_log.csv}
+
+echo "Target Port Analysis"
+
+# grep "Failed password": Filter for failed attempts.
+# grep -oE 'port[ =]+[0-9]+': Extract the port section.
+# grep -oE '[0-9]+': Extract just the port number.
+# sort | uniq -c: Group and count them.
+# sort -nr: Sort the final counts numerically in reverse (descending) order.
+grep "Failed password" "$CLEAN_LOG" | grep -oE 'port[ =]+[0-9]+' | grep -oE '[0-9]+' | sort | uniq -c | sort -nr | while read count port; do
+    printf "Port %-4s : %d attempts\n" "$port" "$count"
+done#!/bin/bash
+# Task 3: The Report Dashboard
+# Summarizes targeted ports for all failed login attempts.
+
+# Assuming clean_log.csv is in the same directory, but using an argument is safer.
+
+CLEAN_LOG=${1:-clean_log.csv}
+
+echo "Target Port Analysis"
+
+# grep "Failed password": Filter for failed attempts.
+# grep -oE 'port[ =]+[0-9]+': Extract the 'port=XX' or 'port XX' part.
+# grep -oE '[0-9]+': Extract just the port number.
+# sort -n | uniq -c: Sort numerically and count occurrences.
+grep "Failed password" "$CLEAN_LOG" | grep -oE 'port[ =]+[0-9]+' | grep -oE '[0-9]+' | sort -n | uniq -c | while read count port; do
+    printf "---------------------"
+    printf "Port %-4s : %d attempts\n" "$port" "$count"
+done
